@@ -93,10 +93,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         listView.setOnItemClickListener { parent, view, position, id ->
-            val taskId = currentTaskKey
+            // Get the taskSnapshot for the clicked item
+            val taskSnapshot = dataSnapshot?.children?.toList()?.getOrNull(position)
+            val taskId = taskSnapshot?.key
             val text = listView.getItemAtPosition(position).toString()
 
+            // Check for null before accessing taskId
             if (taskId != null) {
+                // Remove the task from Firebase
                 databaseWriteReference.child(taskId).removeValue().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         // Update UI only if the task removal is successful
