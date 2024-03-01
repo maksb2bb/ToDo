@@ -1,6 +1,9 @@
 package com.example.template2
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -25,8 +28,6 @@ class RegistrationActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-
-
         regBtn.setOnClickListener {
             if (mailText.text.toString().isEmpty() || pswd.text.toString().isEmpty()) {
                 Toast.makeText(this, "Поле с почтой или паролем не заполенно", Toast.LENGTH_SHORT)

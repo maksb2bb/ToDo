@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val databaseWriteReference =
             FirebaseDatabase.getInstance().reference.child("user")
                 .child(currentUser?.uid ?: "default")
-
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(false)
         val listView = findViewById<ListView>(R.id.listView)
         val labelText: EditText = findViewById(R.id.labelText)
         val button = findViewById<Button>(R.id.buttonLabel)
@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 
         databaseReadReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(data: DataSnapshot) {
-                // Update dataSnapshot when data changes
                 dataSnapshot = data
                 todos.clear()
                 for (taskSnapshot in data.children) {
@@ -53,11 +52,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Handle errors here
                 Toast.makeText(
                     this@MainActivity,
-                    "Ошибка при загрузке заданий из Firebase",
-                    Toast.LENGTH_LONG
+                    "Ошибка при загрузке заданий",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         })
@@ -76,14 +74,14 @@ class MainActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 Toast.makeText(
                                     this,
-                                    "Задание добавлено в Firebase",
-                                    Toast.LENGTH_LONG
+                                    "Задание добавлено",
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             } else {
                                 Toast.makeText(
                                     this,
-                                    "Ошибка при добавлении задания в Firebase",
-                                    Toast.LENGTH_LONG
+                                    "Ошибка при добавлении задания",
+                                    Toast.LENGTH_SHORT
                                 ).show()
                             }
                         }
@@ -92,33 +90,33 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        listView.setOnItemClickListener { parent, view, position, id ->
-            // Get the taskSnapshot for the clicked item
-            val taskSnapshot = dataSnapshot?.children?.toList()?.getOrNull(position)
-            val taskId = taskSnapshot?.key
-            val text = listView.getItemAtPosition(position).toString()
+        listView.setOnItemClickListener { _, _, position, _ ->
+            // Get the task key from the selected position
+            val taskKey = dataSnapshot?.children?.toList()?.get(position)?.key
 
-            // Check for null before accessing taskId
-            if (taskId != null) {
-                // Remove the task from Firebase
-                databaseWriteReference.child(taskId).removeValue().addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Update UI only if the task removal is successful
-                        todos.removeAt(position)
-                        adapter.notifyDataSetChanged()
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Задание $text удалено из Firebase",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Ошибка при удалении задания из Firebase",
-                            Toast.LENGTH_LONG
-                        ).show()
+            // Check if the task key is not null
+            if (taskKey != null) {
+                // Remove the task from the list
+                todos.removeAt(position)
+                adapter.notifyDataSetChanged()
+
+                // Remove the task from the Firebase database
+                databaseWriteReference.child(taskKey).removeValue()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(
+                                this,
+                                "Задание удалено",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                this,
+                                "Ошибка при удалении задания",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
             }
         }
     }

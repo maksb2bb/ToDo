@@ -1,7 +1,10 @@
 package com.example.template2
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +15,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 
+
 class LoginActivity : AppCompatActivity() {
 
-    val mAuth = FirebaseAuth.getInstance()
+    private val mAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +30,26 @@ class LoginActivity : AppCompatActivity() {
         val loginBtn: Button = findViewById(R.id.loginBtn)
         val pswdReset: TextView = findViewById(R.id.resetPswd)
 
+        fun isOnline(context: Context): Boolean {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+            connectivityManager?.let {
+                val capabilities = it.getNetworkCapabilities(connectivityManager.activeNetwork)
+                capabilities?.let { caps ->
+                    if (caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                        caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+                    ) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+        if (!isOnline(this)) { // 'this' refers to the Context, in an Activity you can directly use 'this'
+            val intent = Intent(this, NoConnections::class.java)
+            startActivity(intent)
+        }
 
         loginBtn.setOnClickListener {
             if (emailText.text.toString().isEmpty() || pswdText.text.toString().isEmpty()) {
