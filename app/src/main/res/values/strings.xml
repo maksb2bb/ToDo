@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">ToDo</string>
+    <string name="app_name" translatable="false">ToDo</string>
+        <!-- Другие строковые ресурсы -->
+    <string name="empty_fields_message" translatable="false">Поле с почтой или паролем не заполнено</string>
+    <string name="auth_failed_message" translatable="false">Аутентификация не удалась.</string>
+    <string name="enter_email_message" translatable="false">Пожалуйста, введите вашу электронную почту</string>
+    <string name="email_hint" translatable="false">Enter e-mail...</string>
+    <string name="password_hint" translatable="false">Enter password...</string>
+    <string name="login_btn" translatable="false">Login</string>
+    <string name="orRegistration" translatable="false">Or registration</string>
+    <string name="resetPassword" translatable="false">Reset password</string>
+    <string name="themeSwitcher" translatable="false">themeSwitcher</string>
+    <string name="no_internet_connection">No internet connection available. Check your connection.</string>
+    <string name="internet_connection_available">Internet connection available.</string>
+    <string name="addTask">Добавить задание в список</string>
+    <string name="enterTask">Введите задание</string>
+    <string name="toDo">Список дел</string>
 </resources>

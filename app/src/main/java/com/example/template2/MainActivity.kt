@@ -15,36 +15,39 @@ import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
-    private val mAuth = FirebaseAuth.getInstance()
+    private lateinit var mAuth: FirebaseAuth
     private var dataSnapshot: DataSnapshot? = null
-    private var currentTaskKey: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mAuth = FirebaseAuth.getInstance()
         val currentUser = mAuth.currentUser
-        val databaseReadReference =
-            FirebaseDatabase.getInstance().reference.child("user")
-                .child(currentUser?.uid ?: "default")
-        val databaseWriteReference =
-            FirebaseDatabase.getInstance().reference.child("user")
-                .child(currentUser?.uid ?: "default")
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(false)
-        val listView = findViewById<ListView>(R.id.listView)
+
+        // Проверяем, аутентифицирован ли пользователь
+        if (currentUser == null) {
+            Toast.makeText(this, "Пользователь не аутентифицирован", Toast.LENGTH_SHORT).show()
+            finish() // Закрыть активность, если пользователь не аутентифицирован
+            return
+        }
+
+        val userUid = currentUser.uid // Теперь безопасно использовать UID
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("user").child(userUid)
+
+        val listView: ListView = findViewById(R.id.listView)
         val labelText: EditText = findViewById(R.id.labelText)
-        val button = findViewById<Button>(R.id.buttonLabel)
+        val button: Button = findViewById(R.id.buttonLabel)
         val todos: MutableList<String> = mutableListOf()
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, todos)
         listView.adapter = adapter
 
-        databaseReadReference.addValueEventListener(object : ValueEventListener {
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(data: DataSnapshot) {
                 dataSnapshot = data
                 todos.clear()
-                for (taskSnapshot in data.children) {
-                    val task = taskSnapshot.child("task").getValue(String::class.java)
-                    if (task != null) {
+                data.children.forEach { taskSnapshot ->
+                    taskSnapshot.child("task").getValue(String::class.java)?.let { task ->
                         todos.add(task)
                     }
                 }
@@ -52,78 +55,43 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Ошибка при загрузке заданий",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@MainActivity, "Ошибка при загрузке заданий: ${databaseError.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
 
         button.setOnClickListener {
             val text = labelText.text.toString().trim()
             if (text.isNotEmpty()) {
-                val newId = databaseWriteReference.push().key
-                currentTaskKey = newId
-                val taskMap = HashMap<String, Any>()
-                taskMap["task"] = text
-                if (newId != null) {
-                    databaseWriteReference.child(newId).setValue(taskMap)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                Toast.makeText(
-                                    this,
-                                    "Задание добавлено",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                Toast.makeText(
-                                    this,
-                                    "Ошибка при добавлении задания",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
+                val newId = databaseReference.push().key ?: return@setOnClickListener // Возврат, если ключ null
+                val taskMap = hashMapOf("task" to text)
+                databaseReference.child(newId).setValue(taskMap).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Задание добавлено", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Ошибка при добавлении задания: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 labelText.text.clear()
+            } else {
+                Toast.makeText(this, "Задание не может быть пустым", Toast.LENGTH_SHORT).show()
             }
         }
 
         listView.setOnItemClickListener { _, _, position, _ ->
-            // Get the task key from the selected position
-            val taskKey = dataSnapshot?.children?.toList()?.get(position)?.key
-
-            // Check if the task key is not null
-            if (taskKey != null) {
-                // Remove the task from the list
-                todos.removeAt(position)
-                adapter.notifyDataSetChanged()
-
-                // Remove the task from the Firebase database
-                databaseWriteReference.child(taskKey).removeValue()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(
-                                this,
-                                "Задание удалено",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                this,
-                                "Ошибка при удалении задания",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            dataSnapshot?.children?.elementAt(position)?.key?.let { taskKey ->
+                databaseReference.child(taskKey).removeValue().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Задание удалено", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Ошибка при удалении задания: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
+                }
             }
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
-        mAuth.signOut()
+        mAuth.signOut() // Выход из учетной записи при уничтожении активности
     }
 }
