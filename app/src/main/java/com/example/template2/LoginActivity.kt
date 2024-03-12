@@ -6,10 +6,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +15,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var loginProgress: ProgressBar
     private lateinit var mAuth: FirebaseAuth
 
 
@@ -59,9 +56,7 @@ class LoginActivity : AppCompatActivity() {
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Email and password must not be empty", Toast.LENGTH_SHORT).show()
             } else {
-                loginProgress.visibility = View.VISIBLE
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                    loginProgress.visibility = View.GONE
                     if (task.isSuccessful) {
                         Log.d(TAG, "signInWithEmail:success")
                         val intent = Intent(this, MainActivity::class.java)

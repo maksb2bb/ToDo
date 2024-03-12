@@ -12,17 +12,19 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"
+        android:autofillHints="emailAddress"
+        android:background="@drawable/textviewborder"
         android:ems="10"
         android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
+        android:padding="10sp"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/passwordEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        android:autofillHints="emailAddress"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/passwordEdit"
@@ -37,7 +39,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        android:autofillHints="password"/>
+        android:autofillHints="password"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
 
     <Button
         android:id="@+id/loginBtn"
@@ -49,7 +53,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/resetPswd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/buttonstyle"
+        android:paddingStart="20sp"
+        android:paddingEnd="20sp"/>
 
     <TextView
         android:id="@+id/regTransition"
@@ -61,7 +68,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
 
     <TextView
         android:id="@+id/resetPswd"
@@ -73,7 +82,9 @@
         app:layout_constraintBottom_toTopOf="@+id/regTransition"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
 
     <ImageView
         android:id="@+id/themeSwitcher"

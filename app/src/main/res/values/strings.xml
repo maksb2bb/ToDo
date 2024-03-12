@@ -7,7 +7,7 @@
     <string name="email_hint" translatable="false">Enter e-mail...</string>
     <string name="password_hint" translatable="false">Enter password...</string>
     <string name="login_btn" translatable="false">Login</string>
-    <string name="orRegistration" translatable="false">Or registration</string>
+    <string name="orRegistration" translatable="false">Registration</string>
     <string name="resetPassword" translatable="false">Reset password</string>
     <string name="themeSwitcher" translatable="false">themeSwitcher</string>
     <string name="no_internet_connection">No internet connection available. Check your connection.</string>

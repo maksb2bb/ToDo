@@ -14,14 +14,16 @@
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"
         android:ems="10"
-        android:hint="Enter e-mail..."
+        android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/pswdText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.905" />
+        app:layout_constraintVertical_bias="0.905"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
 
     <EditText
         android:id="@+id/pswdText"
@@ -29,34 +31,54 @@
         android:layout_height="60dp"
         android:layout_marginBottom="50dp"
         android:ems="10"
-        android:hint="Enter password..."
+        android:hint="@string/password_hint"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/buttonReg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
 
     <Button
         android:id="@+id/buttonReg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="220dp"
-        android:text="Registration"
+        android:text="@string/orRegistration"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/loginTran"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/buttonstyle"
+        android:paddingStart="20sp"
+        android:paddingEnd="20sp"/>
 
     <TextView
         android:id="@+id/loginTran"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="72dp"
-        android:text="Or login..."
+        android:text="@string/login_btn"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/textviewborder"
+        android:padding="10sp"/>
+
+    <ImageView
+        android:id="@+id/themeSwitcher"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        app:srcCompat="@drawable/ic_action_moon"
+        android:contentDescription="@string/themeSwitcher" />
 </androidx.constraintlayout.widget.ConstraintLayout>
